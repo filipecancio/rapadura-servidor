@@ -5,7 +5,7 @@ import io.ktor.server.netty.*
 import dev.cancio.plugins.*
 
 fun main() {
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
+    embeddedServer(Netty, port = 8080, host = "localhost") {
         configureRouting()
         configureSerialization()
         configureHTTP()

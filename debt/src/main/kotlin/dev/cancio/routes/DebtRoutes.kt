@@ -7,6 +7,7 @@ import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import java.util.*
 
 fun Route.debtRoute(){
     route("/debt"){
@@ -22,7 +23,8 @@ fun Route.debtRoute(){
                 "Missing or malformed id",
                 status = HttpStatusCode.BadRequest
             )
-            val debt = debtStorage.find { it.id == id } ?: return@get call.respondText(
+            val idUuid = UUID.fromString(id)
+            val debt = debtStorage.find { it.id == idUuid } ?: return@get call.respondText(
                 "No Debt with id $id",
                 status = HttpStatusCode.NotFound
             )
@@ -35,7 +37,8 @@ fun Route.debtRoute(){
         }
         delete("{id}") {
             val id = call.parameters["id"] ?: return@delete call.respond(HttpStatusCode.BadRequest)
-            if (debtStorage.removeIf { it.id == id }) {
+            val idUuid = UUID.fromString(id)
+            if (debtStorage.removeIf { it.id == idUuid }) {
                 call.respondText("Debt removed correctly", status = HttpStatusCode.Accepted)
             } else {
                 call.respondText("Not Found", status = HttpStatusCode.NotFound)
